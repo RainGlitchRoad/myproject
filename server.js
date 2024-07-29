@@ -15,7 +15,7 @@ app.get('/api/getAvailabilities', async (req, res) => {
   console.log(`Fetching data for arrival: ${arrival}, departure: ${departure}`);
 
   try {
-    const response = await fetch(`https://api.beds24.com/json/getAvailabilities`, {
+    const response = await fetch('https://api.beds24.com/json/getAvailabilities', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -32,13 +32,16 @@ app.get('/api/getAvailabilities', async (req, res) => {
     const text = await response.text();
     console.log('API response text:', text);  // Log the raw response body
 
+    // Attempt to parse JSON
+    let data;
     try {
-      const data = JSON.parse(text);
-      res.json(data);
+      data = JSON.parse(text);
     } catch (error) {
       console.error('Error parsing JSON:', error);
-      res.status(500).send('Error parsing JSON response');
+      return res.status(500).send('Error parsing JSON response');
     }
+
+    res.json(data);
 
   } catch (error) {
     console.error('Error fetching data:', error);
