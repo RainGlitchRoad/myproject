@@ -14,18 +14,21 @@ app.get('/api/getAvailabilities', async (req, res) => {
   const { arrival, departure } = req.query;
   console.log(`Fetching data for arrival: ${arrival}, departure: ${departure}`);
 
+  const requestData = {
+    checkIn: arrival.replace(/-/g, ''),
+    checkOut: departure.replace(/-/g, ''),
+    propId: process.env.PROP_KEY,
+    numAdult: '2',  // Example value, adjust based on your requirements
+    numChild: '0'   // Example value, adjust based on your requirements
+  };
+
   try {
     const response = await fetch('https://api.beds24.com/json/getAvailabilities', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'X-API-KEY': process.env.API_KEY
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        "arrival": arrival,
-        "departure": departure,
-        "propId": process.env.PROP_KEY
-      })
+      body: JSON.stringify(requestData)
     });
 
     console.log(`API response status: ${response.status}`);
