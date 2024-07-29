@@ -41,6 +41,11 @@ app.get('/api/getAvailabilities', async (req, res) => {
       return res.status(500).send('Error parsing JSON response');
     }
 
+    if (!response.ok) {
+      console.error('API error response:', data);
+      return res.status(response.status).json(data);
+    }
+
     res.json(data);
 
   } catch (error) {
