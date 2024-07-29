@@ -19,7 +19,7 @@ app.get('/api/getAvailabilities', async (req, res) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.API_KEY}`
+        'X-API-KEY': process.env.API_KEY
       },
       body: JSON.stringify({
         "arrival": arrival,
@@ -30,7 +30,7 @@ app.get('/api/getAvailabilities', async (req, res) => {
 
     console.log(`API response status: ${response.status}`);
     const text = await response.text();
-    console.log('API response text:', text);
+    console.log('API response text:', text);  // Log the raw response body
 
     try {
       const data = JSON.parse(text);
