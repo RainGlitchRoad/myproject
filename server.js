@@ -1,27 +1,26 @@
-const express = require('express');
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+import express from 'express';
+import fetch from 'node-fetch';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 const app = express();
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
 app.get('/api/getAvailabilities', async (req, res) => {
-  const { arrival, departure } = req.query;
-  const apiKey = process.env.API_KEY;
-  const propKey = process.env.PROP_KEY;
-
-  if (!arrival || !departure) {
-    return res.status(400).json({ error: 'Arrival and departure dates are required' });
-  }
-
-  try {
-    const response = await fetch(`https://api.beds24.com/json/getAvailabilities?apiKey=${apiKey}&propKey=${propKey}&arrival=${arrival}&departure=${departure}`);
-    const data = await response.json();
-    res.json(data);
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    res.status(500).json({ error: 'Error fetching data' });
-  }
+    const { arrival, departure } = req.query;
+    const url = `https://api.beds24.com/json/getAvailabilities?apiKey=${process.env.API_KEY}&propKey=${process.env.PROP_KEY}&arrival=${arrival}&departure=${departure}`;
+    
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        res.json(data);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        res.status(500).send('Error fetching data');
+    }
 });
 
-app.listen(port, () => {
-  console.log(`Proxy server listening at http://localhost:${port}`);
+app.listen(PORT, () => {
+    console.log(`Proxy server listening at http://localhost:${PORT}`);
 });
